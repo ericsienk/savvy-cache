@@ -1,7 +1,7 @@
 {
   "name": "savvy-cache",
   "version": "1.0.0",
-  "description": "",
+  "description": "A very lightweight and savvy cache utility.",
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && tsc --p tsconfig.build.json",
@@ -12,8 +12,8 @@
     "type": "git",
     "url": "git+https://github.com/ericsienk/savvy-cache.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ericsienk",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ericsienk/savvy-cache/issues"
   },
