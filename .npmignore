@@ -1,0 +1,10 @@
+src/
+node_modules/
+coverage/
+.gitignore
+.prettierignore
+.prettierrc.json
+jest.config.json
+jest.config.build.json
+tsconfig.build.json
+tsconfig.json

@@ -2,7 +2,8 @@
   "name": "savvy-cache",
   "version": "1.0.0",
   "description": "A very lightweight and savvy cache utility.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc --p tsconfig.build.json",
     "test": "jest --coverage",
