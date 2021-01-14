@@ -5,20 +5,23 @@ export default <T = any>(
   getValueToCache: ((key: string) => PromiseLike<T>) | (() => PromiseLike<T>),
   secondsUntilRefresh: number = Infinity
 ) => {
-  let cache: any = {};
-  let lastRefreshTimestamp = 0;
+  const cache: any = {};
   return {
     get: async (key?: string): Promise<T> => {
-      let accessor = key || KEYLESS;
-      const isExpired =
-        (Date.now() - lastRefreshTimestamp) / 1000 >= secondsUntilRefresh;
-      if (accessor in cache && !isExpired) {
-        return cache[accessor];
+      const accessor = key || KEYLESS;
+
+      if (accessor in cache) {
+        const { value, lastRefreshTimestamp } = cache[accessor];
+
+        if ((Date.now() - lastRefreshTimestamp) / 1000 < secondsUntilRefresh) {
+          return value;
+        }
       }
 
-      lastRefreshTimestamp = Date.now();
+      const lastRefreshTimestamp = Date.now();
       const value = getValueToCache(key as any);
-      cache[accessor] = value;
+      cache[accessor] = { value, lastRefreshTimestamp };
+
       return value;
     },
   };
