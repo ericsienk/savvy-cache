@@ -1,17 +1,25 @@
-export default <T>(
-  getValueToCache: () => Promise<T> | T,
-  secondsUntilRefresh: number
+type PromiseLike<T> = T | Promise<T>;
+const KEYLESS = Symbol("keyless");
+
+export default <T = any>(
+  getValueToCache: ((key: string) => PromiseLike<T>) | (() => PromiseLike<T>),
+  secondsUntilRefresh: number = Infinity
 ) => {
+  let cache: any = {};
   let lastRefreshTimestamp = 0;
-  let lastCachedValue: T;
   return {
-    get: async (): Promise<T> => {
-      if ((Date.now() - lastRefreshTimestamp) / 1000 >= secondsUntilRefresh) {
-        lastCachedValue = await getValueToCache();
-        lastRefreshTimestamp = Date.now();
+    get: async (key?: string): Promise<T> => {
+      let accessor = key || KEYLESS;
+      const isExpired =
+        (Date.now() - lastRefreshTimestamp) / 1000 >= secondsUntilRefresh;
+      if (accessor in cache && !isExpired) {
+        return cache[accessor];
       }
 
-      return lastCachedValue;
+      lastRefreshTimestamp = Date.now();
+      const value = getValueToCache(key as any);
+      cache[accessor] = value;
+      return value;
     },
   };
 };
